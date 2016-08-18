@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+    <meta name="apple-touch-fullscreen" content="yes"/>
+    <title>loading</title>
+
+</head>
+<body>
+<style>
+    *{margin:0;padding:0;}
+    body{background-color: #ccc;}
+    .drawDown{position: absolute;z-index:-1;width: 50px;height:50px;left:50%;top:5px;margin-left: -25px;}
+    .bg{width:50px;height:50px; border-radius: 50%;}
+    .bcolor{background: #ccc;}
+    .bimg{background-image: url("./img/logo-vue.png");background-position:  center center;
+        background-repeat:  no-repeat;background-size: 65%;}
+    .bimg-c{background-color: rgba(255,255,255,.6);}
+    #iconload{position: absolute;top:0;left:0;    border-radius: 50%;}
+
+    .Wrap{position: relative;}
+    .drawWrap{min-height: 200px;transition-timing-function: cubic-bezier(0.1, 0.57, 0.1, 1);transition-duration: 0ms;}
+    .duration-600{ transition-duration: 600ms;}
+    li{list-style: none;}
+    .list{width: 100%;}
+    .list li{width: 100%;height: 40px;line-height:40px;background-color: #ddd;}
+    .list li:nth-child(even){background-color: #eee;}
+
+    .loadmore{width: 100%;position: absolute;z-index:-1;bottom: 10px;left:0;text-align: center;}
+</style>
+
+<div class="drawDown">
+    <div class="bg bimg bimg-c"></div>
+    <canvas id="iconload" width="50px" height="50px" style=""></canvas>
+</div>
+
+<div class="Wrap">
+<div class="drawWrap" id="drawWrap">
+    <ul class="list">
+        <li>1</li>
+        <li>2</li>
+        <li>3</li>
+        <li>4</li>
+        <li>5</li>
+        <li>6</li>
+        <li>7</li>
+        <li>8</li>
+        <li>9</li>
+        <li>10</li>
+        <li>11</li>
+        <li>12</li>
+        <li>13</li>
+        <li>14</li>
+        <li>15</li>
+        <li>16</li>
+        <li>17</li>
+        <li>18</li>
+        <li>19</li>
+        <li>20</li>
+    </ul>
+
+</div>
+<div class="loadmore">
+    加载更多..
+</div>
+</div>
+
+<script src="js/iconload-more.js"></script>
+<script src="./js/com.js"></script>
+<script src="js/touch.js"></script>
+<script src="./js/jquery-1.11.3.min.js"></script>
+</body>
+</html>
