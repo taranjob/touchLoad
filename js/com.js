@@ -1,35 +1,45 @@
 window.addEventListener('DOMContentLoaded', function () {
     $("body").css("min-height", window.innerHeight);
 
-    var current="index";
-    TouchtoTop.Current=current;
-    TouchtoTop.Pages.index=downCall;
+    TouchPageEvent();
+    touchInit();
 
-    TouchtoBottom.Current=current;
-    TouchtoBottom.Pages.index=upCall;
+    //下拉、上拉设置
+    function touchInit() {
+        var current = "index";//当前单页面#hash名字
+        TouchtoTop.Current = current;
+        TouchtoTop.Dom = document.getElementById("drawWrap");//下拉时动画移动的元素
+        TouchtoTop.Pages.index = downCall;//下拉时 对应的回调函数
 
-    function downCall(){
-        touchIndex.downCall();
-    }
-    function upCall(){
-        touchIndex.upCall();
-    }
+        TouchtoBottom.Current = current;
+        TouchtoBottom.Dom = document.getElementById("drawWrap");//上拉时动画移动的元素
+        TouchtoBottom.Pages.index = upCall;//上拉时动画移动的元素
 
-    var touchIndex={
-        downCall:function(){
-             console.log('downCall')
-        },
-        upCall:function(){
-            console.log('upCall')
+        function downCall() {
+            touchCall.downCall();
+        }
+
+        function upCall() {
+            touchCall.upCall();
+        }
+
+        var touchCall = {
+            downCall: function () {
+                console.log('downCall');
+            },
+            upCall: function () {
+                console.log('upCall');
+            }
         }
     }
 
-    TouchPageEvent();
+
 
 }, false);
 
 /**
  * touch.js  判断滑动到底部，若当前页面注册有事件名，则触发改事件
+ * Pages 是单页面#hash名字，单页面不同路由下有各自：滑动的元素id,下拉回调函数,上拉回调函数
  * @type {{orderList: null}}
  */
 var TouchtoBottom = {
@@ -39,6 +49,7 @@ var TouchtoBottom = {
         userComment: null,
     },
     Current:null,
+    Dom:""
 };
 var TouchtoTop = {
     Pages: {
@@ -46,16 +57,17 @@ var TouchtoTop = {
         orderList: null,
         userComment: null,
     },
-    Current:null
+    Current:null,
+    Dom:""
 };
 
-/*上拉请求最新一页*/
+/*触摸事件*/
 function TouchPageEvent() {
     var sec = document.body;
     var ondrag = false;
     var direction='';
     var dx, dy;
-    var target=document.getElementById("drawWrap");
+    var target=null;
     //监听上拉
     touch.on(sec, 'dragstart', function (ev) {
         //ev.originEvent.preventDefault()
@@ -73,55 +85,53 @@ function TouchPageEvent() {
             ev.originEvent.preventDefault();
             dy = dy || 0;
             if(ev.y>0){
-                if(ev.y>80){
-                    ev.y=80;
-                }else if(ev.y>50 && ev.y<80){
+                target=TouchtoTop.Dom;
+                if(ev.y>60){
+                    ev.y=60;
+                }else if(ev.y>35 && ev.y<60){
                     ev.y=ev.y-0.5;
                 }
             }
             if(ev.y<0){
-                if(ev.y<-80){
-                    ev.y=-80;
-                }else if(ev.y>-80 && ev.y<-50){
+                target=TouchtoBottom.Dom;
+                if(ev.y<-60){
+                    ev.y=-60;
+                }else if(ev.y>-60 && ev.y<-35){
                     ev.y=ev.y+0.5;
                 }
             }
 
             var offy = dy + ev.y + "px";
 
-            target.style.webkitTransform = "translate3d(" + 0 + "," + offy + ",0)";
+            if(target){//如果指定了移动效果的元素
+                target.style.webkitTransform = "translate3d(" + 0 + "," + offy + ",0)";
+            }
         }
     })
     touch.on(sec, 'dragend', function (ev) {
         if (ondrag  ) {
+            ev.originEvent.preventDefault();
+            dy=0;
+            ondrag = false;
+            if(target){
+                target.classList.add("duration-600");
+                target.style.webkitTransform = "translate3d(" + 0 + "," + 0 + ",0)";
+                setTimeout(function(){
+                    target.classList.remove("duration-600");
+                },600);
+            }
             if(direction=='down'){
-                //console.log('drag')
                 if (TouchtoTop.Current!=null && window.location.href.indexOf("/"+TouchtoTop.Current)>-1 && typeof(TouchtoTop.Pages[TouchtoTop.Current]) == "function" ) {
                     TouchtoTop.Pages[TouchtoTop.Current]();
                     //console.log('current')
                 }else{
-                    //console.log('current null:'+(TouchtoTop.Current!=null)+','+(window.location.href.indexOf("/"+TouchtoTop.Current)>-1)+','+(typeof(TouchtoTop.Pages[TouchtoTop.Current]) == "function"))
+                    console.log('current null:'+(TouchtoTop.Current!=null)+','+(window.location.href.indexOf("/"+TouchtoTop.Current)>-1)+','+(typeof(TouchtoTop.Pages[TouchtoTop.Current]) == "function"))
                 }
-                ev.originEvent.preventDefault();
-                dy=0;
-                target.classList.add("duration-600");
-                target.style.webkitTransform = "translate3d(" + 0 + "," + 0 + ",0)";
-                setTimeout(function(){
-                    target.classList.remove("duration-600");
-                },600);
-                ondrag = false;
             }else{
-                dy=0;
-                target.classList.add("duration-600");
-                target.style.webkitTransform = "translate3d(" + 0 + "," + 0 + ",0)";
-                setTimeout(function(){
-                    target.classList.remove("duration-600");
-                },600);
-
                 if (TouchtoBottom.Current!=null && window.location.href.indexOf("/"+TouchtoBottom.Current)>-1 && typeof(TouchtoBottom.Pages[TouchtoBottom.Current]) == "function" ) {
                     TouchtoBottom.Pages[TouchtoBottom.Current]();
                 }else{
-                    //console.log('current null:'+(TouchtoBottom.Current!=null)+','+(window.location.href.indexOf("/"+TouchtoBottom.Current)>-1)+','+(typeof(TouchtoBottom.Pages[TouchtoBottom.Current]) == "function"))
+                    console.log('current null:'+(TouchtoBottom.Current!=null)+','+(window.location.href.indexOf("/"+TouchtoBottom.Current)>-1)+','+(typeof(TouchtoBottom.Pages[TouchtoBottom.Current]) == "function"))
                 }
             }
 
