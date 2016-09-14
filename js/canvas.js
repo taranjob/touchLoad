@@ -22,7 +22,8 @@ window.requestAnimFrame = (function(){
 var step = 0;
 var Lines=[
     {
-        color:" rgba(65,184,131,.9)",
+        //color:" rgba(65,184,131,.9)",
+        color:" rgba(5,17,41,.5)",
         High:canvas.height
     },
     //{
@@ -65,8 +66,8 @@ function loop(){
         ctx.beginPath();
         ctx.moveTo(0, Lines[j].High);
         ctx.bezierCurveTo(canvas.width /2-10, Lines[j].High+deltaHeight-10, canvas.width / 2+10, Lines[j].High+deltaHeightRight+10, canvas.width, Lines[j].High);
-        ctx.lineTo(canvas.width, 0);
-        ctx.lineTo(0, 0);
+        ctx.lineTo(canvas.width, canvas.height);
+        ctx.lineTo(0, canvas.height);
         ctx.lineTo(0, Lines[j].High);
         ctx.closePath();
         ctx.fill();
